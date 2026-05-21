@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -19,12 +20,22 @@ export default function Login() {
             });
 
             const data = await res.json();
-            console.log(data);
+            const { success } = data;
+            if (success) {
+                //navigate to the homepage
+                alert("successfully able to login!")
+                setError(""); //updating error
+                
+            } else {
+                //indicate invalid credentials
+                setError("Incorrect email or password");
 
-            alert("Login successful!");
+            }
+
+            // alert("Login successful!");
         } catch (err) {
             console.error(err);
-            alert("Server error");
+            // alert("Server error");
         }
     };
 
@@ -46,7 +57,7 @@ export default function Login() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-
+                {error && <p style={{ color: "red", marginBottom: "5px" }}>{error}</p>}
                 <button type="submit" className="btn primary">
                     Login
                 </button>

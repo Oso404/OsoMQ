@@ -6,7 +6,7 @@ const app = express();
 const PORT = process.env.PORT; //.env file must be in same directory as file using dotenv.config()
 
 app.use(express.json());
-app.use(cors())
+app.use(cors({credentials:true}))
 
 app.use("/auth",authRoutes)
 
