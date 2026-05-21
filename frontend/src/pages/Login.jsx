@@ -1,12 +1,14 @@
 import { useState } from "react";
 import "../App.css";
-import { Link } from "react-router-dom";
+import { Link , useNavigate} from "react-router-dom";
+
+
 
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-
+    const navigate  = useNavigate()
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -17,6 +19,7 @@ export default function Login() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ email, password }),
+                credentials:"include",
             });
 
             const data = await res.json();
@@ -25,7 +28,18 @@ export default function Login() {
                 //navigate to the homepage
                 alert("successfully able to login!")
                 setError(""); //updating error
-                
+
+                //right here is where we should call /auth/me to run through the middleware 
+                const meRes = await fetch("http://localhost:6969/auth/me", {
+                    credentials: "include",
+                });
+
+                const meData = await meRes.json(); //contains email,password,created_at
+
+                console.log(meData.userId);
+
+                navigate("/dashboard"); //searches for /dashboard in App.jsx
+
             } else {
                 //indicate invalid credentials
                 setError("Incorrect email or password");
