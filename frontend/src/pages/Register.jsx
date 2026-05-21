@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 
 import "../App.css";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,7 +20,12 @@ export default function Register() {
     });
 
     const data = await res.json();
-    console.log(data);
+    const {success} = data;
+    if(success){
+      //user was successfully created
+      navigate("/login");
+    }
+    
   };
 
   return (

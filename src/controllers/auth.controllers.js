@@ -1,5 +1,8 @@
 import { pool } from "../db/db.js"
 import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
+import "../config/env.js"
+
 export const registerUser = async (req, res) => {
 
   try {
@@ -12,11 +15,11 @@ export const registerUser = async (req, res) => {
       "SELECT * FROM users WHERE email = $1",
       [email]
     );
-    if(existingUser.rows.length > 0){
+    if (existingUser.rows.length > 0) {
       console.log("Email already exists!");
-      return res.status(409).json({message:"Email already exists!"});
+      return res.status(409).json({ message: "Email already exists!" });
     }
-    const hashedPassword = await bcrypt.hash(password,10);
+    const hashedPassword = await bcrypt.hash(password, 10);
     const result = await pool.query(
       "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *",
       [email, hashedPassword]
@@ -24,15 +27,20 @@ export const registerUser = async (req, res) => {
     console.log(result.rows[0]);
     return res.status(200).json({
       message: "New user created!",
+      success: true,
     });
 
   } catch (err) {
     console.log(err);
     return res.status(500).json({
       message: "Server error",
+      success: false,
     });
   }
 };
+
+
+
 
 export const loginUser = async (req, res) => {
   try {
@@ -56,10 +64,27 @@ export const loginUser = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid credentials" });
-    }else{
-      //have to take to homepage?
-    }
+      return res.status(401).json({
+        message: "Invalid credentials",
+        success: false,
+      });
+    } 
+    let jwt_token = jwt.sign(
+        //this is the payload (remember jwt signature is header.payload.signature and signature needs a secret)
+        {
+          userId: user.email,
+          role: "user"
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" } //ig we oughta add this like header?...header is generated on its own!
+      );
+
+    res.cookie("token", jwt_token, {
+      httpOnly: true,
+      secure: false,      
+      sameSite: "lax",
+      maxAge: 60 * 60 * 1000,
+    });
 
     return res.status(200).json({
       message: "Login successful!",
@@ -67,7 +92,9 @@ export const loginUser = async (req, res) => {
         id: user.id,
         email: user.email,
       },
+      success:true,
     });
+
 
   } catch (err) {
     console.log(err);
