@@ -73,7 +73,7 @@ export const loginUser = async (req, res) => {
         //this is the payload (remember jwt signature is header.payload.signature and signature needs a secret)
         {
           userId: user.email,
-          role: "user"
+          role:"uploader"
         },
         process.env.JWT_SECRET,
         { expiresIn: "1h" } //ig we oughta add this like header?...header is generated on its own!
