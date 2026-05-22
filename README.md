@@ -20,7 +20,7 @@ Tech Stack:
 * RESTful API architecture
 * JWT authentication with HttpOnly cookies
 * Amazon S3 (object storage)
-* Amazon SQS or BullMQ (message queuing)
+* Amazon SQS (message queuing)
 * FFmpeg (video transcoding and processing)
 * Sharp (image processing)
 * Worker-based distributed processing system
