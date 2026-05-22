@@ -6,6 +6,22 @@ The system is designed to mimic real-world media platforms like Instagram or You
 
 ---
 
+# 🧠 What this project demonstrates
+
+This project showcases:
+
+* Scalable backend architecture
+* Distributed processing systems
+* Real-world media pipelines
+* Async job queues and workers
+* Cloud storage integration
+* Authentication systems
+* Full-stack integration
+
+---
+
+---
+
 # 🚀 Features
 
 ## 📁 File Upload System
@@ -82,7 +98,7 @@ Frontend Dashboard Update
 
 ## Queue / Async Processing
 
-* Amazon SQS *(or BullMQ alternative)*
+* Amazon SQS 
 
 ## Storage
 
@@ -95,7 +111,7 @@ Frontend Dashboard Update
 
 ## Database
 
-* PostgreSQL / MongoDB *(depending on implementation)*
+* PostgreSQL 
 
 ## Frontend
 
@@ -214,24 +230,10 @@ Each file has:
 
 ---
 
-# 🧠 What this project demonstrates
-
-This project showcases:
-
-* Scalable backend architecture
-* Distributed processing systems
-* Real-world media pipelines
-* Async job queues and workers
-* Cloud storage integration
-* Authentication systems
-* Full-stack integration
-
----
-
 # 👨‍💻 Author
 
 Built by Julio Reyes
-Focused on full-stack development and scalable backend systems.
+Focused on scalable backend systems.
 
 ---
 
