@@ -17,6 +17,7 @@ Tech Stack:
 * Node.js
 * Express.js
 * React
+* PostgreSQL 
 * RESTful API architecture
 * JWT authentication with HttpOnly cookies
 * Amazon S3 (object storage)
