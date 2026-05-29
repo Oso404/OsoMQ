@@ -2,7 +2,7 @@ import { pool } from "../db/db.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import "../config/env.js"
-
+import crypto from "crypto"
 export const registerUser = async (req, res) => {
 
   try {
@@ -20,9 +20,10 @@ export const registerUser = async (req, res) => {
       return res.status(409).json({ message: "Email already exists!" });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
+    const id = crypto.randomUUID();
     const result = await pool.query(
-      "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *",
-      [email, hashedPassword]
+      "INSERT INTO users (id,email, password) VALUES ($1, $2, $3) RETURNING *",
+      [id,email, hashedPassword]
     );
     console.log(result.rows[0]);
     return res.status(200).json({
@@ -72,6 +73,7 @@ export const loginUser = async (req, res) => {
     let jwt_token = jwt.sign(
         //this is the payload (remember jwt signature is header.payload.signature and signature needs a secret)
         {
+          id: user.id, //i need to add this for aws
           userId: user.email,
           role:"uploader"
         },

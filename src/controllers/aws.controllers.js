@@ -76,3 +76,8 @@ export const upload = async (req, res) => {
         return res.status(500).json({ message: "Upload failed" });
     }
 };
+
+
+export const retrieve = async (req, res) => {
+    
+}

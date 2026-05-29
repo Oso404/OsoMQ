@@ -17,7 +17,7 @@ router.get("/me", authMiddleware, async (req, res) => {
 
   res.json({
     authenticated: true,
-    user: result.rows[0], //contains: email, password, created_at
+    user: result.rows[0], //contains: email, password, created_at AND NOW id
   });
 });
 

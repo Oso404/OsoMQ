@@ -1,20 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import "../css/Dashboard.css";
+import logo from "../images/upload-logo.png";
+import FilesTable from "../components/FilesTable";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [files, setFiles] = useState([]);
+  const [uploading, setUploading] = useState(false);
+
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const res = await fetch("http://localhost:6969/auth/me", {
-          credentials: "include", //will send cookie 
+          credentials: "include",
         });
 
         const data = await res.json();
-        setUser(data.user); //contains email pass and created_at
+        setUser(data.user);
       } catch (err) {
-        console.error("Failed to fetch user:", err);
+        console.error("Error fetching user:", err);
       } finally {
         setLoading(false);
       }
@@ -23,39 +30,125 @@ export default function Dashboard() {
     fetchUser();
   }, []);
 
-  if (loading) {
-    return <div style={{ padding: 20 }}>Loading...</div>;
-  }
+  const handleFileChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
 
-  if (!user) {
-    return <div style={{ padding: 20 }}>Not logged in</div>;
-  }
+    const mappedFiles = selectedFiles.map((file) => ({
+      file,
+      name: file.name,
+      size: file.size,
+      type: file.type,
+    }));
+
+    setFiles(mappedFiles);
+  };
+
+  const handleUpload = async () => {
+    if (files.length === 0) return;
+
+    const formData = new FormData();
+
+    files.forEach((f) => {
+      formData.append("files", f.file);
+    });
+
+    setUploading(true);
+
+    try {
+      const res = await fetch("http://localhost:6969/aws/upload", {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      });
+
+      const data = await res.json();
+      console.log("Upload success:", data);
+
+      setFiles([]);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    } catch (err) {
+      console.error("Upload error:", err);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  if (loading) return <div className="dashboard-loading">Loading...</div>;
 
   return (
-    <div style={{ padding: 20, fontFamily: "sans-serif" }}>
-      <h2>Dashboard</h2>
+    <div className="dashboard-container">
+      <div className="dashboard-header">
+        <h1>Welcome {user?.email || "User"}</h1>
 
-      <div
-        style={{
-          marginTop: 20,
-          padding: 15,
-          border: "1px solid #ccc",
-          borderRadius: 8,
-          maxWidth: 400,
-        }}
-      >
-        <h3>User Info</h3>
+        <div className="header-actions">
+          <input
+            type="file"
+            multiple
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            className="file-input"
+          />
 
-        <p>
-          <strong>Email:</strong> {user.email}
-        </p>
+          <button
+            className="upload-btn"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            Choose Files
+          </button>
 
-
-
-        <p>
-          <strong>Created At:</strong> {user.created_at}
-        </p>
+          <button
+            className="upload-btn"
+            onClick={handleUpload}
+            disabled={uploading}
+          >
+            {uploading ? "Uploading..." : "Upload"}
+          </button>
+        </div>
       </div>
+
+      <FilesTable />
+      <br></br>
+      {/* <div className="upload-section">
+        <input
+          type="file"
+          multiple
+          ref={fileInputRef}
+          onChange={handleFileChange}
+        />
+
+        <button className="upload-btn" onClick={handleUpload} disabled={uploading}>
+          {uploading ? "Uploading..." : "Upload to S3"}
+        </button>
+      </div> */}
+
+      <div className="file-table-container">
+        <h2 className="file-table-title">Selected Files</h2>
+
+        {files.length === 0 ? (
+          <p className="no-files">No files selected</p>
+        ) : (
+          <table className="file-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Size (KB)</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {files.map((f, idx) => (
+                <tr key={idx}>
+                  <td>{f.name}</td>
+                  <td>{f.type || "unknown"}</td>
+                  <td>{(f.size / 1024).toFixed(2)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+      {/* <FilesTable /> */}
     </div>
   );
 }
