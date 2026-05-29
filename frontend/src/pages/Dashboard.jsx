@@ -8,7 +8,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [files, setFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
-
+  const [refresh, setRefresh] = useState(false);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -66,6 +66,8 @@ export default function Dashboard() {
 
       setFiles([]);
       if (fileInputRef.current) fileInputRef.current.value = "";
+      setRefresh(prev => !prev);
+
     } catch (err) {
       console.error("Upload error:", err);
     } finally {
@@ -106,7 +108,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <FilesTable />
+      <FilesTable refresh={refresh} />
       <br></br>
       {/* <div className="upload-section">
         <input

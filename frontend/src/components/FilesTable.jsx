@@ -1,27 +1,27 @@
 import { useEffect, useState } from "react";
 
-export default function FilesTable() {
+export default function FilesTable({ refresh }) {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchFiles = async () => {
-      try {
-        const res = await fetch("http://localhost:6969/user/files", {
-          credentials: "include",
-        });
-        //should be an array of files in res.body
-        const data = await res.json();
-        setFiles(data.files || []);
-      } catch (err) {
-        console.error("Failed to fetch files:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchFiles = async () => {
+    try {
+      const res = await fetch("http://localhost:6969/user/files", {
+        credentials: "include",
+      });
 
+      const data = await res.json();
+      setFiles(data.files || []);
+    } catch (err) {
+      console.error("Failed to fetch files:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchFiles();
-  }, []);
+  }, [refresh]);
 
   if (loading) return <p>Loading files...</p>;
 
