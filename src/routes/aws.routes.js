@@ -1,7 +1,7 @@
 import { pool } from "../db/db.js";
 import express from "express";
 import {upload} from "../controllers/aws.controllers.js"
-import { uploadMiddleware } from "../middleware/aws.middleware.js";
+import  uploadMiddleware  from "../middleware/aws.middleware.js";
 import { authMiddleware } from "../middleware/auth.middleware.js";
 
 const router = express.Router();

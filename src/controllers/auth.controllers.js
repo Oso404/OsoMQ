@@ -72,6 +72,7 @@ export const loginUser = async (req, res) => {
     let jwt_token = jwt.sign(
         //this is the payload (remember jwt signature is header.payload.signature and signature needs a secret)
         {
+          id: user.id, //i need to add this for aws
           userId: user.email,
           role:"uploader"
         },
