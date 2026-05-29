@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import "../css/Dashboard.css";
 import logo from "../images/upload-logo.png";
+import FilesTable from "../components/FilesTable";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -77,11 +78,37 @@ export default function Dashboard() {
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
-        {/* <img src={logo} alt="upload logo" className="logo" /> */}
         <h1>Welcome {user?.email || "User"}</h1>
+
+        <div className="header-actions">
+          <input
+            type="file"
+            multiple
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            className="file-input"
+          />
+
+          <button
+            className="upload-btn"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            Choose Files
+          </button>
+
+          <button
+            className="upload-btn"
+            onClick={handleUpload}
+            disabled={uploading}
+          >
+            {uploading ? "Uploading..." : "Upload"}
+          </button>
+        </div>
       </div>
 
-      <div className="upload-section">
+      <FilesTable />
+      <br></br>
+      {/* <div className="upload-section">
         <input
           type="file"
           multiple
@@ -92,15 +119,15 @@ export default function Dashboard() {
         <button className="upload-btn" onClick={handleUpload} disabled={uploading}>
           {uploading ? "Uploading..." : "Upload to S3"}
         </button>
-      </div>
+      </div> */}
 
-      <div className="file-table">
-        <h2>Selected Files</h2>
+      <div className="file-table-container">
+        <h2 className="file-table-title">Selected Files</h2>
 
         {files.length === 0 ? (
-          <p>No files selected</p>
+          <p className="no-files">No files selected</p>
         ) : (
-          <table>
+          <table className="file-table">
             <thead>
               <tr>
                 <th>Name</th>
@@ -121,6 +148,7 @@ export default function Dashboard() {
           </table>
         )}
       </div>
+      {/* <FilesTable /> */}
     </div>
   );
 }
