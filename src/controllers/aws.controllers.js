@@ -59,6 +59,7 @@ export const upload = async (req, res) => {
                     file.mimetype,
                     file.size,
                     key,
+                    // status default is "pending" so we dont need to insert it here
                     //   process.env.S3_BUCKET_NAME, i only have  1 bucket for now
                 ]
             );

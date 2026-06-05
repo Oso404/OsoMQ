@@ -9,7 +9,7 @@ router.get("/files", authMiddleware, async (req, res) => {
     const userId = req.user.id; // from our middleware
     console.log("Fetching files for user ID:", userId);
     const result = await pool.query(
-      `SELECT file_name, file_type, file_size, created_at, s3_key
+      `SELECT file_name, file_type, file_size, created_at, s3_key, status
        FROM files
        WHERE user_id = $1
        ORDER BY created_at DESC`,

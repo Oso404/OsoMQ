@@ -1,5 +1,3 @@
-/* Dashboard.css */
-
 .dashboard-container {
     min-height: 100vh;
     background: #f5f9ff;
@@ -7,7 +5,6 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Header */
 
 .dashboard-header {
     display: flex;
@@ -44,7 +41,6 @@
     font-size: 14px;
 }
 
-/* Upload Section */
 
 .upload-section {
     background: white;
@@ -75,23 +71,18 @@
     text-align: center;
 }
 
-/* Buttons */
-
-/* Buttons */
 
 .upload-btn,
 .logout-btn {
-    background: linear-gradient(
-        135deg,
-        #7dd3fc,
-        #2563eb
-    );
+    background: linear-gradient(135deg,
+            #7dd3fc,
+            #2563eb);
 
     color: white;
 
     border: none;
 
-    border-radius: 9999px; /* extra round */
+    border-radius: 9999px;
 
     padding: 16px 38px;
 
@@ -111,11 +102,9 @@
 
     box-shadow: 0 12px 24px rgba(37, 99, 235, 0.35);
 
-    background: linear-gradient(
-        135deg,
-        #93c5fd,
-        #1d4ed8
-    );
+    background: linear-gradient(135deg,
+            #93c5fd,
+            #1d4ed8);
 }
 
 .upload-btn:active,
@@ -123,7 +112,6 @@
     transform: translateY(0);
 }
 
-/* File Table */
 
 .file-table-container {
     background: white;
@@ -175,8 +163,6 @@
     padding: 30px;
 }
 
-/* Loading */
-
 .loading-container {
     min-height: 100vh;
 
@@ -198,7 +184,7 @@
     background: white;
     border-radius: 20px;
 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     margin-bottom: 25px;
 }
 
@@ -208,7 +194,75 @@
     align-items: center;
 }
 
-/* hide real file input */
 .file-input {
     display: none;
+}
+
+table tbody tr:hover {
+    background-color: #f3f6ff;
+}
+
+table tbody tr:hover td {
+    border-color: transparent;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logout-btn {
+    margin-left: auto;
+}
+
+.file-table tbody tr {
+    cursor: pointer;
+}
+
+.file-table tbody tr:hover {
+    background-color: #f3f4f6;
+}
+
+.selected,
+.selected:hover {
+    background-color: #dbeafe;
+}
+
+.selected td {
+    background-color: #dbeafe !important;
+}
+
+.file-table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.delete-btn {
+  background: #ef4444;
+  color: white;
+
+  border: none;
+  border-radius: 9999px;
+
+  padding: 16px 38px;
+  font-size: 15px;
+  font-weight: 700;
+
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.25);
+}
+
+.delete-btn:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(220, 38, 38, 0.35);
+}
+
+.delete-btn:active {
+  transform: translateY(0);
 }

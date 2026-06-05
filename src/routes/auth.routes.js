@@ -2,10 +2,12 @@ import { pool } from "../db/db.js";
 import express from "express";
 import { registerUser, loginUser } from "../controllers/auth.controllers.js";
 import { authMiddleware } from "../middleware/auth.middleware.js";
+import { logoutUser } from "../controllers/auth.controllers.js";
 const router = express.Router();
 
 router.post("/register", registerUser)
 router.post("/login",loginUser)
+router.post("/logout", logoutUser);
 router.get("/me", authMiddleware, async (req, res) => {
   const userId = req.user.userId; //contains user email
 
