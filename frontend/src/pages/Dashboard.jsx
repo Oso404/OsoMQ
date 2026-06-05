@@ -2,14 +2,17 @@ import { useEffect, useState, useRef } from "react";
 import "../css/Dashboard.css";
 import logo from "../images/upload-logo.png";
 import FilesTable from "../components/FilesTable";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [files, setFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
-
+  const [refresh, setRefresh] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState([]);
   const fileInputRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -66,6 +69,8 @@ export default function Dashboard() {
 
       setFiles([]);
       if (fileInputRef.current) fileInputRef.current.value = "";
+      setRefresh(prev => !prev);
+
     } catch (err) {
       console.error("Upload error:", err);
     } finally {
@@ -73,14 +78,35 @@ export default function Dashboard() {
     }
   };
 
+  const logoutUser = async () => {
+    //ill clear cookie in backend
+    try {
+      await fetch("http://localhost:6969/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      setUser(null);
+    } catch (err) {
+      console.error("Logout error:", err);
+    }
+    navigate("/login");
+  }
   if (loading) return <div className="dashboard-loading">Loading...</div>;
 
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
-        <h1>Welcome {user?.email || "User"}</h1>
+        <h1>
+           {user?.email?.split("@")[0] || "User"}
+        </h1>
 
         <div className="header-actions">
+          <button
+            className="upload-btn logout-btn"
+            onClick={logoutUser}
+          >
+            Logout
+          </button>
           <input
             type="file"
             multiple
@@ -102,11 +128,12 @@ export default function Dashboard() {
             disabled={uploading}
           >
             {uploading ? "Uploading..." : "Upload"}
+
           </button>
         </div>
       </div>
 
-      <FilesTable />
+      <FilesTable refresh={refresh} />
       <br></br>
       {/* <div className="upload-section">
         <input
@@ -122,7 +149,20 @@ export default function Dashboard() {
       </div> */}
 
       <div className="file-table-container">
-        <h2 className="file-table-title">Selected Files</h2>
+        <div className="file-table-header">
+          <h2 className="file-table-title">Selected Files</h2>
+
+          <button
+            className="delete-btn"
+            disabled={selectedFiles.length === 0}
+            onClick={() => {
+              setFiles(files.filter((f) => !selectedFiles.includes(f)));
+              setSelectedFiles([]);
+            }}
+          >
+            Delete Selected
+          </button>
+        </div>
 
         {files.length === 0 ? (
           <p className="no-files">No files selected</p>
@@ -138,7 +178,19 @@ export default function Dashboard() {
 
             <tbody>
               {files.map((f, idx) => (
-                <tr key={idx}>
+                <tr
+                  key={idx}
+                  onClick={() => setSelectedFiles((prev) => {
+                    if (prev.includes(f)) {
+                      return prev.filter((file) => file !== f);
+                    } else {
+                      return [...prev, f];
+                    }
+                  })
+                  }
+
+                  className={selectedFiles.includes(f) ? "selected" : ""}
+                >
                   <td>{f.name}</td>
                   <td>{f.type || "unknown"}</td>
                   <td>{(f.size / 1024).toFixed(2)}</td>
@@ -148,7 +200,7 @@ export default function Dashboard() {
           </table>
         )}
       </div>
-      {/* <FilesTable /> */}
-    </div>
+
+    </div >
   );
 }
