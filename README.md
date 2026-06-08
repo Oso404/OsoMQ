@@ -1,10 +1,10 @@
-#AI Media Intelligence Platform 
+# AI Media Intelligence Platform 
 
 A distributed backend system for managing, processing, and intelligently searching large collections of user-uploaded images and videos using AI-driven metadata extraction and semantic search.
 
 The system allows users to upload media through a stateless API while background workers asynchronously process files to generate embeddings, extract metadata, and enable natural-language search such as “find me images with dogs” or “videos with people running.” This transforms raw media storage into an intelligent, searchable content system.
 
-FEATURES:
+## FEATURES:
 - Upload images and videos through RESTful API endpoints
 - Asynchronous processing using message queues and worker-based architecture
 - AI-powered metadata extraction from images and videos
@@ -17,7 +17,7 @@ FEATURES:
 - Scalable worker-based distributed processing system
 - Event-driven backend architecture
 
-TECH STACK:
+## TECH STACK:
 - Node.js
 - Express.js
 - React
