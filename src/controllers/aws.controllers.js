@@ -16,11 +16,13 @@ we'll be sent....
 actually we r gonna use FormData^^
 
 */
-import  s3  from "../aws/s3Client.js";
+import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
+import s3 from "../aws/s3Client.js";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { pool } from "../db/db.js";
 import { randomUUID } from "crypto";
-
+import "../config/env.js"
+const sqs = new SQSClient({ region: process.env.AWS_REGION });
 export const upload = async (req, res) => {
     try {
         /////
@@ -46,7 +48,7 @@ export const upload = async (req, res) => {
                     ContentType: file.mimetype,
                 })
             );
-
+            //to s3 it goes
             const result = await pool.query(
                 `INSERT INTO files
         (id, user_id, file_name, file_type, file_size, s3_key)
@@ -63,9 +65,33 @@ export const upload = async (req, res) => {
                     //   process.env.S3_BUCKET_NAME, i only have  1 bucket for now
                 ]
             );
+            /*
+            to sqs it goes
+            this is where i would send file info to sqs
+            fields: file_id, s3_key, file.mimetype
+            */
+            try {
+                await sqs.send(
+                    new SendMessageCommand({
+                        QueueUrl: process.env.SQS_QUEUE_URL,
+                        MessageBody: JSON.stringify({
+                            fileId,
+                            userId,
+                            s3Key: key,
+                            fileType: file.mimetype,
+                            fileSize: file.size
+                        })
+                    })
+                );
+                console.log("sqs successful");
+            }catch (err) {
+                console.error("SQS error:", err);
+            }
+            
 
             uploadedFiles.push(result.rows[0]);
         }
+
 
         return res.status(200).json({
             message: "Upload successful",
@@ -80,5 +106,5 @@ export const upload = async (req, res) => {
 
 
 export const retrieve = async (req, res) => {
-    
+
 }

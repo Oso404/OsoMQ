@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 export default function FilesTable({ refresh }) {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [expandedRows, setExpandedRows] = useState([]); const fetchFiles = async () => {
+  const [visibleCount, setVisibleCount] = useState(10);
+  const [expandedRows, setExpandedRows] = useState([]); const fetchFiles = async () => {    
     try {
       const res = await fetch("http://localhost:6969/user/files", {
         credentials: "include",
@@ -76,8 +77,8 @@ export default function FilesTable({ refresh }) {
                     <td colSpan="4">
                       <a href={f.file_url} target="_blank" rel="noopener noreferrer">
                         {f.file_type?.startsWith("image/")
-                          ? "View Image"
-                          : "View Video"}
+                          ? "Summary and View"
+                          : "Summary and Download"}
                       </a>
                     </td>
                   </tr>

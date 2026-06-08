@@ -66,10 +66,10 @@ export default function Dashboard() {
 
       const data = await res.json();
       console.log("Upload success:", data);
-
       setFiles([]);
       if (fileInputRef.current) fileInputRef.current.value = "";
       setRefresh(prev => !prev);
+
 
     } catch (err) {
       console.error("Upload error:", err);
