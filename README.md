@@ -1,4 +1,4 @@
-AI Media Intelligence Platform 
+#AI Media Intelligence Platform 
 
 A distributed backend system for managing, processing, and intelligently searching large collections of user-uploaded images and videos using AI-driven metadata extraction and semantic search.
 
